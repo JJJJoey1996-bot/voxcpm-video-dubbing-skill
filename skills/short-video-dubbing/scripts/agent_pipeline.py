@@ -20,6 +20,15 @@ def venv_python() -> str:
     return str(REPO_ROOT / ".venv" / "bin" / "python")
 
 
+def require_venv_python() -> str:
+    python_path = Path(venv_python())
+    if not python_path.exists():
+        raise RuntimeError(
+            "The managed .venv is missing. Run `python skills/short-video-dubbing/scripts/agent_pipeline.py install` first."
+        )
+    return str(python_path)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Unified entrypoint for the short-video dubbing skill.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -56,7 +65,7 @@ def main() -> None:
     if args.command == "prepare":
         run(
             [
-                venv_python(),
+                require_venv_python(),
                 "-m",
                 "voxcpm.video_dub",
                 "--video",
@@ -77,7 +86,7 @@ def main() -> None:
 
     run(
         [
-            venv_python(),
+            require_venv_python(),
             str(REPO_ROOT / "scripts" / "render_pretranslated_video_dub.py"),
             "--video",
             args.video,

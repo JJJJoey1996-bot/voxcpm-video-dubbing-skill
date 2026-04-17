@@ -30,12 +30,14 @@ It assumes the surrounding workspace contains this VoxCPM repository, not just t
 
 - `scripts/install.py` is the cross-platform bootstrapper. It will:
   - install `uv` if missing
+  - automatically provision a managed Python 3.12 `.venv` when the host Python is too new or otherwise unsuitable
   - install Python dependencies with `uv sync --extra video_dub`
   - install or prompt for `git`, `cmake`, and `ffmpeg`
   - clone and build `whisper.cpp`
   - download `ggml-medium.en.bin`
   - download `openbmb/VoxCPM2` into `./models/VoxCPM2`
 - The short-video dubbing flow does not depend on `funasr`. `funasr` is now an optional dependency only for reference-audio auto-transcription in the interactive app, and that optional path is intended for Python versions below 3.13.
+- This fork is intentionally trimmed for agent usage. The bundled Web UI path is not part of the supported install flow here.
 - The pipeline uses `demucs` for two-stem separation (`vocals` and `no_vocals`).
 - Speech timing now comes from `whisper.cpp`. The default path keeps GPU off for stability with `medium.en` on this Mac, but still gives cleaner native timestamp output than the old Python ASR chain here. The pipeline groups word timestamps into short sentence-like chunks to reduce drift.
 - Misaki is used to estimate a phoneme budget for each dubbing chunk and include that constraint in the translation request.

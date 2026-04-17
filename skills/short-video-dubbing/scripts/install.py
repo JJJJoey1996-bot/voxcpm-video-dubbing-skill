@@ -16,6 +16,7 @@ WHISPER_MODEL_REPO = "ggerganov/whisper.cpp"
 WHISPER_MODEL_FILE = "ggml-medium.en.bin"
 VOXCPM_HF_REPO = "openbmb/VoxCPM2"
 VOXCPM_MODELSCOPE_REPO = "OpenBMB/VoxCPM2"
+SUPPORTED_PYTHON = "3.12"
 
 
 def run(cmd: list[str], cwd: Path | None = None) -> None:
@@ -32,10 +33,38 @@ def venv_python() -> Path:
     return REPO_ROOT / ".venv" / "bin" / "python"
 
 
+def python_version(python_exe: Path) -> tuple[int, int] | None:
+    if not python_exe.exists():
+        return None
+    result = subprocess.run(
+        [str(python_exe), "-c", "import sys; print(f'{sys.version_info[0]}.{sys.version_info[1]}')"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    major, minor = result.stdout.strip().split(".")
+    return int(major), int(minor)
+
+
 def ensure_uv() -> None:
     if which("uv"):
         return
     run([sys.executable, "-m", "pip", "install", "uv"])
+
+
+def ensure_supported_python_venv() -> None:
+    target_python = venv_python()
+    current = python_version(target_python)
+    if current == (3, 12):
+        return
+
+    run(["uv", "python", "install", SUPPORTED_PYTHON], cwd=REPO_ROOT)
+
+    venv_dir = REPO_ROOT / ".venv"
+    if venv_dir.exists():
+        shutil.rmtree(venv_dir)
+
+    run(["uv", "venv", "--python", SUPPORTED_PYTHON, str(venv_dir)], cwd=REPO_ROOT)
 
 
 def install_system_packages() -> None:
@@ -79,8 +108,9 @@ def install_system_packages() -> None:
 
 def ensure_python_stack() -> None:
     cache_dir = os.environ.get("UV_CACHE_DIR", "/tmp/uv-cache")
-    run(["uv", "sync", "--extra", "video_dub"], cwd=REPO_ROOT)
     os.environ["UV_CACHE_DIR"] = cache_dir
+    ensure_supported_python_venv()
+    run(["uv", "sync", "--extra", "video_dub", "--python", str(venv_python())], cwd=REPO_ROOT)
 
 
 def ensure_whisper_cpp() -> None:

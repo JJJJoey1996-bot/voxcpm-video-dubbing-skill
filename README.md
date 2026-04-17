@@ -25,6 +25,7 @@
 - **No large models in git**: VoxCPM2 and whisper.cpp models are downloaded only when users install or run the skill
 - **Cross-platform setup** for macOS, Linux, and Windows
 - A practical pipeline for **prepare -> translate -> timing preflight -> controllable cloning -> final video render**
+- This fork intentionally strips the bundled Web UI path and focuses on a cleaner **agent-only workflow**
 
 **Best for**
 
@@ -123,7 +124,6 @@ Chinese Dialect: 四川话, 粤语, 吴语, 东北话, 河南话, 陕西话, 山
   - [Installation](#installation)
   - [Python API](#python-api)
   - [CLI Usage](#cli-usage)
-  - [Web Demo](#web-demo)
   - [Production Deployment](#-production-deployment-nano-vllm)
 - [Models & Versions](#-models--versions)
 - [Performance](#-performance)
@@ -285,12 +285,6 @@ voxcpm batch --input examples/input.txt --output-dir outs
 
 # Help
 voxcpm --help
-```
-
-### Web Demo
-
-```bash
-python app.py --port 8808  # then open in browser: http://localhost:8808
 ```
 
 ### 🚢 Production Deployment (Nano-vLLM)
@@ -551,9 +545,6 @@ python scripts/train_voxcpm_finetune.py \
 # Full fine-tuning
 python scripts/train_voxcpm_finetune.py \
     --config_path conf/voxcpm_v2/voxcpm_finetune_all.yaml
-
-# WebUI for training & inference
-python lora_ft_webui.py   # then open http://localhost:7860
 ```
 
 > **Full guide →** [Fine-tuning Guide](https://voxcpm.readthedocs.io/en/latest/finetuning/finetune.html) (data preparation, configuration, training, LoRA hot-swapping, FAQ)
