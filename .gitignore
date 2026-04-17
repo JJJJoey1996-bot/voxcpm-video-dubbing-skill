@@ -4,3 +4,15 @@ voxcpm.egg-info
 .DS_Store
 ./pretrained_models/
 app_local.py
+.venv/
+.cache/
+outputs/
+models/
+tools/whisper.cpp/build/
+tools/whisper.cpp/
+*.wav
+*.mp4
+*.mov
+*.m4a
+*.safetensors
+*.pth

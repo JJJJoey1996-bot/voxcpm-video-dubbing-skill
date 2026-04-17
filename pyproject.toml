@@ -59,9 +59,14 @@ dev = [
     "flake8>=3.8",
     "pre-commit>=2.0",
 ]
+video_dub = [
+    "demucs>=4.0.1",
+    "misaki>=0.9.4",
+]
 
 [project.scripts]
 voxcpm = "voxcpm.cli:main"
+voxcpm-video-dub = "voxcpm.video_dub:main"
 
 [project.urls]
 Homepage = "https://github.com/OpenBMB/VoxCPM"

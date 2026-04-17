@@ -8,9 +8,6 @@ Related dependencies are imported only when denoising functionality is needed.
 import os
 import tempfile
 from typing import Optional
-import torchaudio
-from modelscope.pipelines import pipeline
-from modelscope.utils.constant import Tasks
 
 
 class ZipEnhancer:
@@ -23,7 +20,15 @@ class ZipEnhancer:
             model_path: ModelScope model path or local path
         """
         self.model_path = model_path
-        self._pipeline = pipeline(Tasks.acoustic_noise_suppression, model=self.model_path)
+        self._pipeline = None
+
+    def _get_pipeline(self):
+        if self._pipeline is None:
+            from modelscope.pipelines import pipeline
+            from modelscope.utils.constant import Tasks
+
+            self._pipeline = pipeline(Tasks.acoustic_noise_suppression, model=self.model_path)
+        return self._pipeline
 
     def _normalize_loudness(self, wav_path: str):
         """
@@ -32,6 +37,8 @@ class ZipEnhancer:
         Args:
             wav_path: Audio file path
         """
+        import torchaudio
+
         audio, sr = torchaudio.load(wav_path)
         loudness = torchaudio.functional.loudness(audio, sr)
         normalized_audio = torchaudio.functional.gain(audio, -20 - loudness)
@@ -57,7 +64,7 @@ class ZipEnhancer:
                 output_path = tmp_file.name
         try:
             # Perform denoising processing
-            self._pipeline(input_path, output_path=output_path)
+            self._get_pipeline()(input_path, output_path=output_path)
             # Loudness normalization
             if normalize_loudness:
                 self._normalize_loudness(output_path)

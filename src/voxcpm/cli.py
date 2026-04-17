@@ -14,6 +14,7 @@ from pathlib import Path
 import soundfile as sf
 
 from voxcpm.core import VoxCPM
+from voxcpm.runtime import DEFAULT_MODELSCOPE_MODEL_ID, EngineConfig, GenerationRequest, VoxCPMEngine
 
 
 DEFAULT_HF_MODEL_ID = "openbmb/VoxCPM2"
@@ -239,6 +240,29 @@ def load_model(args) -> VoxCPM:
         sys.exit(1)
 
 
+def load_engine(args) -> VoxCPMEngine:
+    zipenhancer_path = getattr(args, "zipenhancer_path", None) or os.environ.get(
+        "ZIPENHANCER_MODEL_PATH", None
+    )
+    config = EngineConfig(
+        model_id=args.model_path or args.hf_model_id,
+        modelscope_model_id=getattr(args, "modelscope_model_id", DEFAULT_MODELSCOPE_MODEL_ID),
+        device=args.device,
+        enable_denoiser=not args.no_denoiser,
+        optimize=not args.no_optimize,
+        cache_dir=args.cache_dir,
+        local_files_only=args.local_files_only,
+        zipenhancer_model_id=zipenhancer_path,
+    )
+    try:
+        engine = VoxCPMEngine(config)
+        print(f"Selected backend: {engine.backend.kind}", file=sys.stderr)
+        return engine
+    except Exception as e:
+        print(f"Failed to initialize runtime engine: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
 # -----------------------------
 # Commands
 # -----------------------------
@@ -252,23 +276,24 @@ def _run_single(args, parser, *, text: str, output: str, prompt_text: str | None
     if args.reference_audio:
         require_file_exists(args.reference_audio, parser, "reference audio file")
 
-    model = load_model(args)
-
-    audio_array = model.generate(
-        text=text,
-        prompt_wav_path=args.prompt_audio,
-        prompt_text=prompt_text,
-        reference_wav_path=args.reference_audio,
-        cfg_value=args.cfg_value,
-        inference_timesteps=args.inference_timesteps,
-        normalize=args.normalize,
-        denoise=args.denoise
-        and (args.prompt_audio is not None or args.reference_audio is not None),
+    engine = load_engine(args)
+    sample_rate, audio_array = engine.generate(
+        GenerationRequest(
+            text=text,
+            control="",
+            prompt_audio=args.prompt_audio,
+            reference_audio=args.reference_audio,
+            prompt_text=prompt_text,
+            cfg_value=args.cfg_value,
+            inference_timesteps=args.inference_timesteps,
+            normalize=args.normalize,
+            denoise=args.denoise and (args.prompt_audio is not None or args.reference_audio is not None),
+        )
     )
 
-    sf.write(str(output_path), audio_array, model.tts_model.sample_rate)
+    sf.write(str(output_path), audio_array, sample_rate)
 
-    duration = len(audio_array) / model.tts_model.sample_rate
+    duration = len(audio_array) / sample_rate
     print(f"Saved audio to: {output_path} ({duration:.2f}s)", file=sys.stderr)
 
 
@@ -300,7 +325,7 @@ def cmd_batch(args, parser):
         sys.exit("Error: Input file is empty")
 
     prompt_text = validate_batch_args(args, parser)
-    model = load_model(args)
+    engine = load_engine(args)
 
     prompt_audio_path = None
     if args.prompt_audio:
@@ -319,22 +344,24 @@ def cmd_batch(args, parser):
     for i, text in enumerate(texts, 1):
         try:
             final_text = build_final_text(text, args.control)
-            audio_array = model.generate(
-                text=final_text,
-                prompt_wav_path=prompt_audio_path,
-                prompt_text=prompt_text,
-                reference_wav_path=reference_audio_path,
-                cfg_value=args.cfg_value,
-                inference_timesteps=args.inference_timesteps,
-                normalize=args.normalize,
-                denoise=args.denoise
-                and (prompt_audio_path is not None or reference_audio_path is not None),
+            sample_rate, audio_array = engine.generate(
+                GenerationRequest(
+                    text=final_text,
+                    control="",
+                    prompt_audio=prompt_audio_path,
+                    reference_audio=reference_audio_path,
+                    prompt_text=prompt_text,
+                    cfg_value=args.cfg_value,
+                    inference_timesteps=args.inference_timesteps,
+                    normalize=args.normalize,
+                    denoise=args.denoise and (prompt_audio_path is not None or reference_audio_path is not None),
+                )
             )
 
             output_file = output_dir / f"output_{i:03d}.wav"
-            sf.write(str(output_file), audio_array, model.tts_model.sample_rate)
+            sf.write(str(output_file), audio_array, sample_rate)
 
-            duration = len(audio_array) / model.tts_model.sample_rate
+            duration = len(audio_array) / sample_rate
             print(f"Saved: {output_file} ({duration:.2f}s)", file=sys.stderr)
             success_count += 1
 
@@ -404,6 +431,12 @@ def _add_model_args(parser):
         type=str,
         default=DEFAULT_HF_MODEL_ID,
         help=f"Hugging Face repo id (default: {DEFAULT_HF_MODEL_ID})",
+    )
+    parser.add_argument(
+        "--modelscope-model-id",
+        type=str,
+        default=DEFAULT_MODELSCOPE_MODEL_ID,
+        help=f"ModelScope model id used by download helpers (default: {DEFAULT_MODELSCOPE_MODEL_ID})",
     )
     parser.add_argument(
         "--device",

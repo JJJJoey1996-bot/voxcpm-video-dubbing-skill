@@ -4,6 +4,20 @@
   <b>English</b> | <a href="./README_zh.md">中文</a>
 </p>
 
+> This repository is a distribution-friendly VoxCPM fork focused on a reusable **short-video dubbing skill**.
+> It keeps the heavy models out of git, installs dependencies on demand, supports macOS / Linux / Windows, and is designed to be used by Codex, Claude Code, and similar shell-capable agents.
+>
+> Quick start for the dubbing skill:
+> ```bash
+> python skills/short-video-dubbing/scripts/agent_pipeline.py install
+> python skills/short-video-dubbing/scripts/agent_pipeline.py prepare --video INPUT.mp4 --output-dir ./outputs/job
+> # agent reads translation_request.json, writes translated_chunks.json
+> python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT.mp4 --probe-dir ./outputs/job --output-dir ./outputs/job_safe --translated-json ./outputs/job_safe/translated_chunks.json --device auto
+> ```
+>
+> Main skill entry:
+> [`skills/short-video-dubbing/SKILL.md`](./skills/short-video-dubbing/SKILL.md)
+
 <p align="center">
   <a href="https://github.com/OpenBMB/VoxCPM/"><img src="https://img.shields.io/badge/Project%20Page-GitHub-blue" alt="Project Page"></a>
   <a href="https://huggingface.co/spaces/OpenBMB/VoxCPM-Demo"><img src="https://img.shields.io/badge/Live%20Playground-Demo-orange" alt="Live Playground"></a>

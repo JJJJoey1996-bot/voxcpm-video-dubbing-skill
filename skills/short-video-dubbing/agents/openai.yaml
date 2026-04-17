@@ -1,0 +1,4 @@
+version: 1
+display_name: Short Video Dubbing
+short_description: Prepare, translate, and render VoxCPM short-video dubbing with whisper.cpp timing and controllable voice cloning.
+default_prompt: Translate a short video into Chinese dubbing with the short-video-dubbing skill. Install dependencies if needed, prepare the transcript chunks, rewrite translations to fit timing, and render the final video.

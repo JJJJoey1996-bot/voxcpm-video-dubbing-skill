@@ -4,6 +4,20 @@
   <a href="./README.md">English</a> | <b>中文</b>
 </p>
 
+> 这个仓库是一个更适合公开分发的 VoxCPM 分支，重点提供一个可复用的 **短视频中文配音翻译 skill**。
+> 它不会把大模型直接塞进 git，而是安装时按需下载；同时支持 macOS / Linux / Windows，并且适合 Codex、Claude Code 以及其他能跑 shell 命令的 agent 使用。
+>
+> 短视频配音 skill 的快速开始：
+> ```bash
+> python skills/short-video-dubbing/scripts/agent_pipeline.py install
+> python skills/short-video-dubbing/scripts/agent_pipeline.py prepare --video INPUT.mp4 --output-dir ./outputs/job
+> # agent 读取 translation_request.json，生成 translated_chunks.json
+> python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT.mp4 --probe-dir ./outputs/job --output-dir ./outputs/job_safe --translated-json ./outputs/job_safe/translated_chunks.json --device auto
+> ```
+>
+> Skill 主入口：
+> [`skills/short-video-dubbing/SKILL.md`](./skills/short-video-dubbing/SKILL.md)
+
 <p align="center">
   <a href="https://github.com/OpenBMB/VoxCPM/"><img src="https://img.shields.io/badge/Project%20Page-GitHub-blue" alt="Project Page"></a>
   <a href="https://huggingface.co/spaces/OpenBMB/VoxCPM-Demo"><img src="https://img.shields.io/badge/Live%20Playground-Demo-orange" alt="Live Playground"></a>

@@ -3,6 +3,7 @@ import sys
 import re
 import json
 import tempfile
+import time
 import numpy as np
 from typing import Generator, Optional
 from huggingface_hub import snapshot_download
@@ -87,18 +88,32 @@ class VoxCPM:
 
         self.text_normalizer = None
         self.denoiser = None
+        self._denoiser_enabled = bool(enable_denoiser and zipenhancer_model_path is not None)
+        self._denoiser_model_path = zipenhancer_model_path if self._denoiser_enabled else None
+        self._denoiser_load_seconds: Optional[float] = None
         if enable_denoiser and zipenhancer_model_path is not None:
-            from .zipenhancer import ZipEnhancer
-
-            self.denoiser = ZipEnhancer(zipenhancer_model_path)
-        else:
-            self.denoiser = None
+            print("ZipEnhancer is configured for lazy loading.", file=sys.stderr)
         if optimize:
             print("Warm up VoxCPMModel...", file=sys.stderr)
             self.tts_model.generate(
                 target_text="Hello, this is the first test sentence.",
                 max_len=10,
             )
+
+    def _get_denoiser(self):
+        if not self._denoiser_enabled:
+            return None
+        if self.denoiser is None:
+            from .zipenhancer import ZipEnhancer
+
+            start = time.perf_counter()
+            self.denoiser = ZipEnhancer(self._denoiser_model_path)
+            self._denoiser_load_seconds = time.perf_counter() - start
+            print(
+                f"Loaded ZipEnhancer lazily in {self._denoiser_load_seconds:.2f}s",
+                file=sys.stderr,
+            )
+        return self.denoiser
 
     @classmethod
     def from_pretrained(
@@ -246,16 +261,17 @@ class VoxCPM:
             actual_prompt_path = prompt_wav_path
             actual_ref_path = reference_wav_path
 
-            if denoise and self.denoiser is not None:
+            denoiser = self._get_denoiser() if denoise else None
+            if denoise and denoiser is not None:
                 if prompt_wav_path is not None:
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
                         temp_files.append(tmp.name)
-                    self.denoiser.enhance(prompt_wav_path, output_path=temp_files[-1])
+                    denoiser.enhance(prompt_wav_path, output_path=temp_files[-1])
                     actual_prompt_path = temp_files[-1]
                 if reference_wav_path is not None:
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
                         temp_files.append(tmp.name)
-                    self.denoiser.enhance(reference_wav_path, output_path=temp_files[-1])
+                    denoiser.enhance(reference_wav_path, output_path=temp_files[-1])
                     actual_ref_path = temp_files[-1]
 
             if actual_prompt_path is not None or actual_ref_path is not None:
