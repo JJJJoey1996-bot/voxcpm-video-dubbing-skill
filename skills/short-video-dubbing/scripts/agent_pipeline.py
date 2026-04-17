@@ -29,6 +29,10 @@ def require_venv_python() -> str:
     return str(python_path)
 
 
+def run_doctor() -> None:
+    run([sys.executable, str(REPO_ROOT / "skills" / "short-video-dubbing" / "scripts" / "doctor.py")])
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Unified entrypoint for the short-video dubbing skill.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -36,6 +40,8 @@ def main() -> None:
     install_parser = subparsers.add_parser("install")
     install_parser.add_argument("--download-source", default="hf")
     install_parser.add_argument("--skip-system-deps", action="store_true")
+
+    subparsers.add_parser("doctor")
 
     prepare_parser = subparsers.add_parser("prepare")
     prepare_parser.add_argument("--video", required=True)
@@ -60,9 +66,15 @@ def main() -> None:
         if args.skip_system_deps:
             cmd.append("--skip-system-deps")
         run(cmd)
+        run_doctor()
+        return
+
+    if args.command == "doctor":
+        run_doctor()
         return
 
     if args.command == "prepare":
+        run_doctor()
         run(
             [
                 require_venv_python(),
@@ -84,6 +96,7 @@ def main() -> None:
         )
         return
 
+    run_doctor()
     run(
         [
             require_venv_python(),

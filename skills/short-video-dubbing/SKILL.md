@@ -20,10 +20,12 @@ It assumes the surrounding workspace contains this VoxCPM repository, not just t
      `python ./skills/short-video-dubbing/scripts/install.py`
 2. For agent-friendly orchestration, prefer the unified wrapper:
    `python ./skills/short-video-dubbing/scripts/agent_pipeline.py install`
-3. Prepare the job:
+3. Run the self-check:
+   `python ./skills/short-video-dubbing/scripts/agent_pipeline.py doctor`
+4. Prepare the job:
    `python ./skills/short-video-dubbing/scripts/agent_pipeline.py prepare --video INPUT.mp4 --output-dir ./outputs/job_name`
-4. Read `translation_request.json` and `references/translation_rules.md`, then write a `translated_chunks.json` file.
-5. Render the final dubbed video:
+5. Read `translation_request.json` and `references/translation_rules.md`, then write a `translated_chunks.json` file.
+6. Render the final dubbed video:
    `python ./skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT.mp4 --probe-dir ./outputs/job_name --output-dir ./outputs/job_name_safe --translated-json ./outputs/job_name_safe/translated_chunks.json --device auto`
 
 ## Notes
@@ -38,6 +40,7 @@ It assumes the surrounding workspace contains this VoxCPM repository, not just t
   - download `openbmb/VoxCPM2` into `./models/VoxCPM2`
 - The short-video dubbing flow does not depend on `funasr`. `funasr` is now an optional dependency only for reference-audio auto-transcription in the interactive app, and that optional path is intended for Python versions below 3.13.
 - This fork is intentionally trimmed for agent usage. The bundled Web UI path is not part of the supported install flow here.
+- `scripts/doctor.py` is the health-check entrypoint. It verifies the managed `.venv`, the pinned Python version, required system tools, `whisper.cpp`, and the local VoxCPM2 model before expensive work starts.
 - The pipeline uses `demucs` for two-stem separation (`vocals` and `no_vocals`).
 - Speech timing now comes from `whisper.cpp`. The default path keeps GPU off for stability with `medium.en` on this Mac, but still gives cleaner native timestamp output than the old Python ASR chain here. The pipeline groups word timestamps into short sentence-like chunks to reduce drift.
 - Misaki is used to estimate a phoneme budget for each dubbing chunk and include that constraint in the translation request.
@@ -54,4 +57,5 @@ It assumes the surrounding workspace contains this VoxCPM repository, not just t
 - Implementation details: `references/pipeline.md`
 - Translation rules: `references/translation_rules.md`
 - Cross-platform installer: `scripts/install.py`
+- Health check: `scripts/doctor.py`
 - Agent wrapper: `scripts/agent_pipeline.py`

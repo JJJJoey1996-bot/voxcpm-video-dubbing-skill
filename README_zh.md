@@ -37,6 +37,7 @@
 
 ```bash
 python skills/short-video-dubbing/scripts/agent_pipeline.py install
+python skills/short-video-dubbing/scripts/agent_pipeline.py doctor
 python skills/short-video-dubbing/scripts/agent_pipeline.py prepare --video INPUT.mp4 --output-dir ./outputs/job
 # agent 读取 translation_request.json，生成 translated_chunks.json
 python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT.mp4 --probe-dir ./outputs/job --output-dir ./outputs/job_safe --translated-json ./outputs/job_safe/translated_chunks.json --device auto
