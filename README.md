@@ -26,6 +26,7 @@
 - **Cross-platform setup** for macOS, Linux, and Windows
 - A practical pipeline for **prepare -> translate -> timing preflight -> controllable cloning -> final video render**
 - This fork intentionally strips the bundled Web UI path and focuses on a cleaner **agent-only workflow**
+- The installer now uses a **managed project `.venv`** and a pinned Python path instead of trusting the host environment
 
 **Best for**
 

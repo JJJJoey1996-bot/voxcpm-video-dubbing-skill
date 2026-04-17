@@ -17,10 +17,14 @@ WHISPER_MODEL_FILE = "ggml-medium.en.bin"
 VOXCPM_HF_REPO = "openbmb/VoxCPM2"
 VOXCPM_MODELSCOPE_REPO = "OpenBMB/VoxCPM2"
 SUPPORTED_PYTHON = "3.12"
+MANAGED_VENV_DIR = REPO_ROOT / ".venv"
 
 
-def run(cmd: list[str], cwd: Path | None = None) -> None:
-    subprocess.run(cmd, cwd=str(cwd) if cwd else None, check=True)
+def run(cmd: list[str], cwd: Path | None = None, env: dict[str, str] | None = None) -> None:
+    merged_env = os.environ.copy()
+    if env:
+        merged_env.update(env)
+    subprocess.run(cmd, cwd=str(cwd) if cwd else None, check=True, env=merged_env)
 
 
 def which(name: str) -> str | None:
@@ -29,8 +33,15 @@ def which(name: str) -> str | None:
 
 def venv_python() -> Path:
     if platform.system() == "Windows":
-        return REPO_ROOT / ".venv" / "Scripts" / "python.exe"
-    return REPO_ROOT / ".venv" / "bin" / "python"
+        return MANAGED_VENV_DIR / "Scripts" / "python.exe"
+    return MANAGED_VENV_DIR / "bin" / "python"
+
+
+def managed_env_vars() -> dict[str, str]:
+    return {
+        "UV_PROJECT_ENVIRONMENT": str(MANAGED_VENV_DIR),
+        "VIRTUAL_ENV": str(MANAGED_VENV_DIR),
+    }
 
 
 def python_version(python_exe: Path) -> tuple[int, int] | None:
@@ -58,13 +69,20 @@ def ensure_supported_python_venv() -> None:
     if current == (3, 12):
         return
 
-    run(["uv", "python", "install", SUPPORTED_PYTHON], cwd=REPO_ROOT)
+    run(["uv", "python", "install", SUPPORTED_PYTHON], cwd=REPO_ROOT, env=managed_env_vars())
 
-    venv_dir = REPO_ROOT / ".venv"
-    if venv_dir.exists():
-        shutil.rmtree(venv_dir)
+    legacy_env = REPO_ROOT / ".venv312"
+    if legacy_env.exists() and legacy_env != MANAGED_VENV_DIR:
+        shutil.rmtree(legacy_env)
 
-    run(["uv", "venv", "--python", SUPPORTED_PYTHON, str(venv_dir)], cwd=REPO_ROOT)
+    if MANAGED_VENV_DIR.exists():
+        shutil.rmtree(MANAGED_VENV_DIR)
+
+    run(
+        ["uv", "venv", "--python", SUPPORTED_PYTHON, str(MANAGED_VENV_DIR)],
+        cwd=REPO_ROOT,
+        env=managed_env_vars(),
+    )
 
 
 def install_system_packages() -> None:
@@ -110,21 +128,25 @@ def ensure_python_stack() -> None:
     cache_dir = os.environ.get("UV_CACHE_DIR", "/tmp/uv-cache")
     os.environ["UV_CACHE_DIR"] = cache_dir
     ensure_supported_python_venv()
-    run(["uv", "sync", "--extra", "video_dub", "--python", str(venv_python())], cwd=REPO_ROOT)
+    run(
+        ["uv", "sync", "--locked", "--extra", "video_dub", "--python", str(venv_python())],
+        cwd=REPO_ROOT,
+        env={**managed_env_vars(), "UV_CACHE_DIR": cache_dir},
+    )
 
 
 def ensure_whisper_cpp() -> None:
     whisper_dir = REPO_ROOT / "tools" / "whisper.cpp"
     if not whisper_dir.exists():
         whisper_dir.parent.mkdir(parents=True, exist_ok=True)
-        run(["git", "clone", WHISPER_REPO, str(whisper_dir)])
+        run(["git", "clone", WHISPER_REPO, str(whisper_dir)], env=managed_env_vars())
 
     build_dir = whisper_dir / "build"
     cmake_args = ["cmake", "-S", str(whisper_dir), "-B", str(build_dir)]
     if platform.system() == "Darwin":
         cmake_args.append("-DGGML_METAL=ON")
-    run(cmake_args)
-    run(["cmake", "--build", str(build_dir), "--config", "Release"])
+    run(cmake_args, env=managed_env_vars())
+    run(["cmake", "--build", str(build_dir), "--config", "Release"], env=managed_env_vars())
 
     model_dir = whisper_dir / "models"
     model_dir.mkdir(parents=True, exist_ok=True)
@@ -138,7 +160,7 @@ def ensure_whisper_cpp() -> None:
         f"hf_hub_download(repo_id='{WHISPER_MODEL_REPO}', filename='{WHISPER_MODEL_FILE}', "
         f"local_dir=r'{model_dir}', local_dir_use_symlinks=False)"
     )
-    run([str(py), "-c", code], cwd=REPO_ROOT)
+    run([str(py), "-c", code], cwd=REPO_ROOT, env=managed_env_vars())
 
 
 def ensure_voxcpm_model(download_source: str) -> None:
@@ -157,7 +179,7 @@ def ensure_voxcpm_model(download_source: str) -> None:
             "from huggingface_hub import snapshot_download;"
             f"snapshot_download(repo_id='{VOXCPM_HF_REPO}', local_dir=r'{target_dir}', local_dir_use_symlinks=False)"
         )
-    run([str(py), "-c", code], cwd=REPO_ROOT)
+    run([str(py), "-c", code], cwd=REPO_ROOT, env=managed_env_vars())
 
 
 def main() -> None:

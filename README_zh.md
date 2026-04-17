@@ -26,6 +26,7 @@
 - 支持 **macOS / Linux / Windows** 的跨平台安装流程
 - 一条可复用的 **prepare -> translate -> timing preflight -> 可控克隆 -> 成片渲染** 工作流
 - 这个分支有意移除了内置前端路径，重点保持一个更纯粹的 **agent-only 工作流**
+- 安装器现在会优先使用 **项目自管的 `.venv` 和固定 Python 路径**，而不是信任宿主环境
 
 **适合谁使用**
 

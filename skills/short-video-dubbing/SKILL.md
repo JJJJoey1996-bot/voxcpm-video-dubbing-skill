@@ -33,7 +33,9 @@ It assumes the surrounding workspace contains this VoxCPM repository, not just t
 - `scripts/install.py` is the cross-platform bootstrapper. It will:
   - install `uv` if missing
   - automatically provision a managed Python 3.12 `.venv` when the host Python is too new or otherwise unsuitable
-  - install Python dependencies with `uv sync --extra video_dub`
+  - force all package sync work into that managed `.venv`, instead of reusing the host interpreter
+  - remove legacy `.venv312` leftovers if they would confuse later agent runs
+  - install Python dependencies with locked `uv sync`
   - install or prompt for `git`, `cmake`, and `ffmpeg`
   - clone and build `whisper.cpp`
   - download `ggml-medium.en.bin`
