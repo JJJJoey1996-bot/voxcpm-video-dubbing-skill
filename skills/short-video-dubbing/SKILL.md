@@ -35,6 +35,7 @@ It assumes the surrounding workspace contains this VoxCPM repository, not just t
   - clone and build `whisper.cpp`
   - download `ggml-medium.en.bin`
   - download `openbmb/VoxCPM2` into `./models/VoxCPM2`
+- The short-video dubbing flow does not depend on `funasr`. `funasr` is now an optional dependency only for reference-audio auto-transcription in the interactive app, and that optional path is intended for Python versions below 3.13.
 - The pipeline uses `demucs` for two-stem separation (`vocals` and `no_vocals`).
 - Speech timing now comes from `whisper.cpp`. The default path keeps GPU off for stability with `medium.en` on this Mac, but still gives cleaner native timestamp output than the old Python ASR chain here. The pipeline groups word timestamps into short sentence-like chunks to reduce drift.
 - Misaki is used to estimate a phoneme budget for each dubbing chunk and include that constraint in the translation request.

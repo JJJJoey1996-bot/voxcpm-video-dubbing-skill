@@ -44,7 +44,6 @@ dependencies = [
     "soundfile",
     "librosa",
     "matplotlib",
-    "funasr",
     "spaces",
     "argbind",
     "safetensors"
@@ -62,6 +61,9 @@ dev = [
 video_dub = [
     "demucs>=4.0.1",
     "misaki>=0.9.4",
+]
+reference_asr = [
+    "funasr; python_version < '3.13'",
 ]
 
 [project.scripts]

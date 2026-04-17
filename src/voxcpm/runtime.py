@@ -140,7 +140,10 @@ class PyTorchVoxCPMBackend:
         try:
             from funasr import AutoModel
         except Exception as exc:
-            raise RuntimeError("funasr is not installed, cannot auto-transcribe reference audio.") from exc
+            raise RuntimeError(
+                "Optional dependency 'funasr' is not installed, so reference-audio auto-transcription is unavailable. "
+                "Install the 'reference_asr' extra on Python versions below 3.13 if you need this feature."
+            ) from exc
 
         if not hasattr(self, "_asr_model"):
             device = "cpu"
