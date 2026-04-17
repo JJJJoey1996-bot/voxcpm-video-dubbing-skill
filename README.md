@@ -4,19 +4,56 @@
   <b>English</b> | <a href="./README_zh.md">中文</a>
 </p>
 
-> This repository is a distribution-friendly VoxCPM fork focused on a reusable **short-video dubbing skill**.
-> It keeps the heavy models out of git, installs dependencies on demand, supports macOS / Linux / Windows, and is designed to be used by Codex, Claude Code, and similar shell-capable agents.
->
-> Quick start for the dubbing skill:
-> ```bash
-> python skills/short-video-dubbing/scripts/agent_pipeline.py install
-> python skills/short-video-dubbing/scripts/agent_pipeline.py prepare --video INPUT.mp4 --output-dir ./outputs/job
-> # agent reads translation_request.json, writes translated_chunks.json
-> python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT.mp4 --probe-dir ./outputs/job --output-dir ./outputs/job_safe --translated-json ./outputs/job_safe/translated_chunks.json --device auto
-> ```
->
-> Main skill entry:
-> [`skills/short-video-dubbing/SKILL.md`](./skills/short-video-dubbing/SKILL.md)
+<p align="center">
+  <b>Agent-first short-video dubbing with VoxCPM.</b><br>
+  Cross-platform setup, on-demand model download, whisper.cpp timing, controllable cloning, and a workflow designed for Codex, Claude Code, and similar shell-capable agents.
+</p>
+
+## Product Snapshot
+
+**GitHub repo description**
+
+`Cross-platform VoxCPM short-video dubbing skill with whisper.cpp timing, controllable cloning, and agent-friendly installation.`
+
+**Suggested GitHub topics**
+
+`voxcpm`, `tts`, `voice-cloning`, `video-dubbing`, `ai-dubbing`, `whisper-cpp`, `multilingual-tts`, `agent-skill`, `codex`, `claude-code`
+
+**What this fork adds**
+
+- An agent-oriented **short-video dubbing skill** that can be installed and reused across projects
+- **No large models in git**: VoxCPM2 and whisper.cpp models are downloaded only when users install or run the skill
+- **Cross-platform setup** for macOS, Linux, and Windows
+- A practical pipeline for **prepare -> translate -> timing preflight -> controllable cloning -> final video render**
+
+**Best for**
+
+- Creators who want Chinese dubbing for short-form videos
+- Agent workflows that need a reproducible shell-first dubbing pipeline
+- Teams who want a lighter repo that stays shareable on GitHub
+
+**Quick start**
+
+```bash
+python skills/short-video-dubbing/scripts/agent_pipeline.py install
+python skills/short-video-dubbing/scripts/agent_pipeline.py prepare --video INPUT.mp4 --output-dir ./outputs/job
+# agent reads translation_request.json, writes translated_chunks.json
+python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT.mp4 --probe-dir ./outputs/job --output-dir ./outputs/job_safe --translated-json ./outputs/job_safe/translated_chunks.json --device auto
+```
+
+Main skill entry:
+[`skills/short-video-dubbing/SKILL.md`](./skills/short-video-dubbing/SKILL.md)
+
+## Roadmap
+
+- [x] Cross-platform installer with on-demand model download
+- [x] Agent-friendly prepare / render pipeline
+- [x] Timing preflight with phoneme-aware translation checks
+- [ ] Multi-speaker detection, diarization, and speaker-aware dubbing
+- [ ] Web UI for one-click prepare, translate, preview, and render
+- [ ] Better subtitle export and timeline inspection tools
+- [ ] More robust translation rewrite loops for very dense speech
+- [ ] Reusable speaker library and project presets
 
 <p align="center">
   <a href="https://github.com/OpenBMB/VoxCPM/"><img src="https://img.shields.io/badge/Project%20Page-GitHub-blue" alt="Project Page"></a>

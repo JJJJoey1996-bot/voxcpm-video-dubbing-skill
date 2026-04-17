@@ -4,19 +4,56 @@
   <a href="./README.md">English</a> | <b>中文</b>
 </p>
 
-> 这个仓库是一个更适合公开分发的 VoxCPM 分支，重点提供一个可复用的 **短视频中文配音翻译 skill**。
-> 它不会把大模型直接塞进 git，而是安装时按需下载；同时支持 macOS / Linux / Windows，并且适合 Codex、Claude Code 以及其他能跑 shell 命令的 agent 使用。
->
-> 短视频配音 skill 的快速开始：
-> ```bash
-> python skills/short-video-dubbing/scripts/agent_pipeline.py install
-> python skills/short-video-dubbing/scripts/agent_pipeline.py prepare --video INPUT.mp4 --output-dir ./outputs/job
-> # agent 读取 translation_request.json，生成 translated_chunks.json
-> python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT.mp4 --probe-dir ./outputs/job --output-dir ./outputs/job_safe --translated-json ./outputs/job_safe/translated_chunks.json --device auto
-> ```
->
-> Skill 主入口：
-> [`skills/short-video-dubbing/SKILL.md`](./skills/short-video-dubbing/SKILL.md)
+<p align="center">
+  <b>一个面向 Agent 的 VoxCPM 短视频配音工作流。</b><br>
+  支持跨平台安装、按需下载模型、whisper.cpp 时间戳切分、可控音色克隆，并且专门为 Codex、Claude Code 以及其他能执行 shell 的 agent 设计。
+</p>
+
+## 产品概览
+
+**GitHub 仓库简介**
+
+`Cross-platform VoxCPM short-video dubbing skill with whisper.cpp timing, controllable cloning, and agent-friendly installation.`
+
+**推荐 GitHub Topics**
+
+`voxcpm`, `tts`, `voice-cloning`, `video-dubbing`, `ai-dubbing`, `whisper-cpp`, `multilingual-tts`, `agent-skill`, `codex`, `claude-code`
+
+**这个分支额外提供了什么**
+
+- 一个可复用的、面向 agent 的 **短视频配音翻译 skill**
+- **不把大模型放进 git**：VoxCPM2 和 whisper.cpp 模型会在安装或运行时按需下载
+- 支持 **macOS / Linux / Windows** 的跨平台安装流程
+- 一条可复用的 **prepare -> translate -> timing preflight -> 可控克隆 -> 成片渲染** 工作流
+
+**适合谁使用**
+
+- 想做短视频中文配音的创作者
+- 需要可复现 shell 工作流的 agent / 自动化场景
+- 想把仓库保持轻量、方便传播和二次分发的团队
+
+**快速开始**
+
+```bash
+python skills/short-video-dubbing/scripts/agent_pipeline.py install
+python skills/short-video-dubbing/scripts/agent_pipeline.py prepare --video INPUT.mp4 --output-dir ./outputs/job
+# agent 读取 translation_request.json，生成 translated_chunks.json
+python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT.mp4 --probe-dir ./outputs/job --output-dir ./outputs/job_safe --translated-json ./outputs/job_safe/translated_chunks.json --device auto
+```
+
+Skill 主入口：
+[`skills/short-video-dubbing/SKILL.md`](./skills/short-video-dubbing/SKILL.md)
+
+## 计划表
+
+- [x] 跨平台安装器与按需下载模型
+- [x] 面向 agent 的 prepare / render 工作流
+- [x] 基于音素时长预检的翻译时长控制
+- [ ] 多说话人识别、分离与按说话人配音
+- [ ] Web UI：一键准备、翻译、试听、渲染
+- [ ] 更完善的字幕导出与时间轴检查工具
+- [ ] 更稳健的高密度口播重翻译与缩写机制
+- [ ] 可复用的人物声线库与项目预设
 
 <p align="center">
   <a href="https://github.com/OpenBMB/VoxCPM/"><img src="https://img.shields.io/badge/Project%20Page-GitHub-blue" alt="Project Page"></a>
