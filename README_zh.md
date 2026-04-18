@@ -9,6 +9,23 @@
   支持跨平台安装、按需下载模型、whisper.cpp 时间戳切分、可控音色克隆，并且专门为 Codex、Claude Code 以及其他能执行 shell 的 agent 设计。
 </p>
 
+> 这个仓库基于 [OpenBMB/VoxCPM](https://github.com/OpenBMB/VoxCPM/) 项目构建，重点把原项目整理成一个更适合 Agent 直接调用的短视频配音工作流。
+
+## 从这里开始
+
+如果你只是想启动短视频配音 skill，最常用的是这两步：
+
+```bash
+python skills/short-video-dubbing/scripts/agent_pipeline.py install
+python skills/short-video-dubbing/scripts/agent_pipeline.py doctor
+```
+
+说明：
+
+- **首次安装 / 首次启动会明显更久一些**，因为会自动下载 VoxCPM2、whisper.cpp 模型和相关运行依赖。
+- 之后再次运行会快很多，因为模型和构建产物都会复用本地缓存。
+- 这个分支主打 **agent-only 工作流**，不再强调内置前端界面。
+
 ## 产品概览
 
 **GitHub 仓库简介**
@@ -49,7 +66,39 @@ Skill 主入口：
 
 ## 示例视频
 
-这里直接放了三组首页展示用的原视频 / 中文配音对比链接，访客打开仓库首页就能直接看效果。
+下面直接放三组首页展示用的原视频 / 中文配音对比内容。
+
+### 个人主播口播
+
+原视频：
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/unnamed-original.mp4" controls muted playsinline width="320"></video>
+
+中文配音：
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/unnamed-zh.mp4" controls muted playsinline width="320"></video>
+
+### 高信息密度短视频
+
+原视频：
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/countries-original.mp4" controls muted playsinline width="320"></video>
+
+中文配音：
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/countries-zh.mp4" controls muted playsinline width="320"></video>
+
+### 情绪表达型视频
+
+原视频：
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/vid2-original.mp4" controls muted playsinline width="320"></video>
+
+中文配音：
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/vid2-zh.mp4" controls muted playsinline width="320"></video>
+
+备用直链：
 
 | 案例 | 原视频 | 中文配音视频 | 说明 |
 | --- | --- | --- | --- |

@@ -9,6 +9,23 @@
   Cross-platform setup, on-demand model download, whisper.cpp timing, controllable cloning, and a workflow designed for Codex, Claude Code, and similar shell-capable agents.
 </p>
 
+> This repository is built on top of [OpenBMB/VoxCPM](https://github.com/OpenBMB/VoxCPM/) and repackages the project into an agent-friendly short-video dubbing workflow.
+
+## Start Here
+
+If you only want to run the dubbing skill:
+
+```bash
+python skills/short-video-dubbing/scripts/agent_pipeline.py install
+python skills/short-video-dubbing/scripts/agent_pipeline.py doctor
+```
+
+Notes:
+
+- The **first install/startup will take noticeably longer** because the skill will automatically download VoxCPM2, whisper.cpp assets, and other runtime dependencies.
+- Later runs are much faster because the downloaded models and built tools are reused locally.
+- This fork focuses on an **agent-only workflow** rather than a bundled web UI.
+
 ## Product Snapshot
 
 **GitHub repo description**
@@ -49,7 +66,39 @@ Main skill entry:
 
 ## Showcase
 
-Real before/after comparison videos from the current pipeline:
+Before/after comparison videos from the current pipeline:
+
+### Creator Monologue
+
+Original:
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/unnamed-original.mp4" controls muted playsinline width="320"></video>
+
+Chinese dubbed:
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/unnamed-zh.mp4" controls muted playsinline width="320"></video>
+
+### Dense Info Video
+
+Original:
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/countries-original.mp4" controls muted playsinline width="320"></video>
+
+Chinese dubbed:
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/countries-zh.mp4" controls muted playsinline width="320"></video>
+
+### Emotional Spoken Video
+
+Original:
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/vid2-original.mp4" controls muted playsinline width="320"></video>
+
+Chinese dubbed:
+
+<video src="https://raw.githubusercontent.com/JJJJoey1996-bot/voxcpm-video-dubbing-skill/main/.github/showcase-videos/vid2-zh.mp4" controls muted playsinline width="320"></video>
+
+Fallback links:
 
 | Case | Original | Chinese Dubbed | Notes |
 | --- | --- | --- | --- |
