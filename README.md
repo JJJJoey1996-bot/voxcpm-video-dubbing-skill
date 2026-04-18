@@ -47,6 +47,21 @@ python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT
 Main skill entry:
 [`skills/short-video-dubbing/SKILL.md`](./skills/short-video-dubbing/SKILL.md)
 
+## Showcase
+
+Three before/after comparison pairs are included in [`对比视频`](./对比视频) so visitors can quickly inspect real outputs from the current pipeline.
+
+| Case | Original video | Chinese dubbed video | Notes |
+| --- | --- | --- | --- |
+| Case 1 | [未命名.mp4](./对比视频/未命名.mp4) | [未命名.zh.safe.mp4](./对比视频/未命名.zh.safe.mp4) | Creator-style English monologue -> Chinese dubbed version |
+| Case 2 | [Countries_that_are_d-20260417181809.mp4](./对比视频/Countries_that_are_d-20260417181809.mp4) | [Countries_that_are_d-20260417181809.zh.safe.mp4](./对比视频/Countries_that_are_d-20260417181809.zh.safe.mp4) | Dense informational short video with timing-sensitive narration |
+| Case 3 | [vid2.mp4](./对比视频/vid2.mp4) | [vid2.zh.safe.mp4](./对比视频/vid2.zh.safe.mp4) | Emotion-heavy spoken video translated with controllable Chinese dubbing |
+
+Tips:
+
+- Open the original and dubbed files in two tabs to compare rhythm and pause structure more easily.
+- These examples are repository assets for presentation only; they do not change the current skill workflow.
+
 ## Roadmap
 
 - [x] Cross-platform installer with on-demand model download

@@ -47,6 +47,21 @@ python skills/short-video-dubbing/scripts/agent_pipeline.py render --video INPUT
 Skill 主入口：
 [`skills/short-video-dubbing/SKILL.md`](./skills/short-video-dubbing/SKILL.md)
 
+## 示例视频
+
+我把三组原视频 / 中文配音成片放进了 [`对比视频`](./对比视频) 目录，方便大家直接在仓库首页查看实际效果。
+
+| 案例 | 原视频 | 中文配音视频 | 说明 |
+| --- | --- | --- | --- |
+| 案例 1 | [未命名.mp4](./对比视频/未命名.mp4) | [未命名.zh.safe.mp4](./对比视频/未命名.zh.safe.mp4) | 个人主播英文口播，对应的中文配音版本 |
+| 案例 2 | [Countries_that_are_d-20260417181809.mp4](./对比视频/Countries_that_are_d-20260417181809.mp4) | [Countries_that_are_d-20260417181809.zh.safe.mp4](./对比视频/Countries_that_are_d-20260417181809.zh.safe.mp4) | 信息密度较高、时间轴更敏感的短视频案例 |
+| 案例 3 | [vid2.mp4](./对比视频/vid2.mp4) | [vid2.zh.safe.mp4](./对比视频/vid2.zh.safe.mp4) | 情绪表达更强的英文原视频，对应的中文可控配音版本 |
+
+补充说明：
+
+- 建议把原视频和中文配音视频分别在两个标签页打开，更容易对比节奏和停顿。
+- 这些视频只是项目主页的展示素材，不会影响当前 skill 的逻辑和版本。
+
 ## 计划表
 
 - [x] 跨平台安装器与按需下载模型
