@@ -49,18 +49,18 @@ Main skill entry:
 
 ## Showcase
 
-Three before/after comparison pairs are included in [`对比视频`](./对比视频) so visitors can quickly inspect real outputs from the current pipeline.
+Real before/after comparison videos from the current pipeline:
 
-| Case | Original video | Chinese dubbed video | Notes |
+| Case | Original | Chinese Dubbed | Notes |
 | --- | --- | --- | --- |
-| Case 1 | [未命名.mp4](./对比视频/未命名.mp4) | [未命名.zh.safe.mp4](./对比视频/未命名.zh.safe.mp4) | Creator-style English monologue -> Chinese dubbed version |
-| Case 2 | [Countries_that_are_d-20260417181809.mp4](./对比视频/Countries_that_are_d-20260417181809.mp4) | [Countries_that_are_d-20260417181809.zh.safe.mp4](./对比视频/Countries_that_are_d-20260417181809.zh.safe.mp4) | Dense informational short video with timing-sensitive narration |
-| Case 3 | [vid2.mp4](./对比视频/vid2.mp4) | [vid2.zh.safe.mp4](./对比视频/vid2.zh.safe.mp4) | Emotion-heavy spoken video translated with controllable Chinese dubbing |
+| Creator Monologue | [Watch original](./.github/showcase-videos/unnamed-original.mp4) | [Watch dubbed](./.github/showcase-videos/unnamed-zh.mp4) | English creator-style monologue -> Chinese dubbed version |
+| Dense Info Video | [Watch original](./.github/showcase-videos/countries-original.mp4) | [Watch dubbed](./.github/showcase-videos/countries-zh.mp4) | Information-dense short video with tighter timing requirements |
+| Emotional Spoken Video | [Watch original](./.github/showcase-videos/vid2-original.mp4) | [Watch dubbed](./.github/showcase-videos/vid2-zh.mp4) | Emotion-heavy spoken delivery translated into Chinese dubbing |
 
-Tips:
+Notes:
 
-- Open the original and dubbed files in two tabs to compare rhythm and pause structure more easily.
-- These examples are repository assets for presentation only; they do not change the current skill workflow.
+- These links are placed directly in the homepage showcase section so visitors can compare outputs immediately.
+- The source files are stored in a hidden showcase asset directory instead of the repo root to keep the project tree cleaner.
 
 ## Roadmap
 
